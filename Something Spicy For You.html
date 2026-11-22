@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Something Spicy For You... 🌶️</title>
+
+  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* =========================================================================
+       CORE VARIABLES & RESET
+       ========================================================================= */
+    :root {
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --spicy-bg: #070406;
+      --spicy-burgundy: #3b0712;
+      --spicy-crimson: #d90429;
+      --spicy-hot: #ff1e56;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: var(--font-sans);
+      background-color: var(--spicy-bg);
+      color: #ffffff;
+      scroll-behavior: smooth;
+    }
+
+    .font-display {
+      font-family: var(--font-display);
+    }
+
+    /* Responsive Fluid Typography */
+    .heading-spicy {
+      font-size: clamp(1.7rem, 5.2vw, 3.05rem);
+      line-height: 1.22;
+    }
+
+    .subheading-spicy {
+      font-size: clamp(1.05rem, 3vw, 1.4rem);
+      line-height: 1.5;
+    }
+
+    .heading-reveal {
+      font-size: clamp(1.55rem, 4.8vw, 2.65rem);
+      line-height: 1.22;
+    }
+
+    .letter-text {
+      font-size: clamp(0.97rem, 2.5vw, 1.07rem);
+      line-height: 1.82;
+    }
+
+    /* =========================================================================
+       THEME 1: MYSTERIOUS & SPICY BACKDROP (#070406, #3b0712, #d90429, #ff1e56)
+       ========================================================================= */
+    .theme-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .bg-spicy {
+      background:
+        radial-gradient(circle at 50% 34%, rgba(217, 4, 41, 0.24) 0%, rgba(59, 7, 18, 0.86) 46%, #070406 96%),
+        linear-gradient(180deg, #070406 0%, #1c0309 55%, #070406 100%);
+      opacity: 1;
+    }
+
+    .vignette-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 46%, rgba(0, 0, 0, 0.78) 100%);
+      transition: opacity 1.1s ease;
+    }
+
+    body.romantic-mode .vignette-overlay {
+      background: radial-gradient(circle at center, transparent 56%, rgba(44, 5, 17, 0.45) 100%);
+    }
+
+    /* =========================================================================
+       THEME 2: ROMANTIC & DREAMY BACKDROP (BURGUNDY, WINE RED, BLUSH & ROSE)
+       ========================================================================= */
+    .bg-romantic {
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255, 182, 193, 0.38) 0%, transparent 45%),
+        radial-gradient(circle at 84% 20%, rgba(255, 117, 143, 0.34) 0%, transparent 48%),
+        radial-gradient(circle at 50% 88%, rgba(253, 224, 71, 0.16) 0%, transparent 52%),
+        linear-gradient(145deg, #3b0712 0%, #7f122f 44%, #9e193d 72%, #2b040e 100%);
+      opacity: 0;
+    }
+
+    body.romantic-mode .bg-spicy {
+      opacity: 0;
+    }
+
+    body.romantic-mode .bg-romantic {
+      opacity: 1;
+    }
+
+    /* Warm Romantic Bokeh Lights */
+    .bokeh-orb {
+      position: fixed;
+      border-radius: 9999px;
+      filter: blur(48px);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 1.4s ease;
+    }
+
+    body.romantic-mode .bokeh-orb {
+      opacity: 0.56;
+    }
+
+    @keyframes floatBokeh {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(18px, -22px, 0) scale(1.08); }
+    }
+
+    .animate-bokeh-1 {
+      width: 230px;
+      height: 230px;
+      top: 6%;
+      left: -45px;
+      background: rgba(255, 143, 163, 0.5);
+      animation: floatBokeh 9s ease-in-out infinite;
+    }
+
+    .animate-bokeh-2 {
+      width: 270px;
+      height: 270px;
+      bottom: 8%;
+      right: -55px;
+      background: rgba(255, 204, 213, 0.42);
+      animation: floatBokeh 11s ease-in-out infinite reverse;
+    }
+
+    .animate-bokeh-3 {
+      width: 200px;
+      height: 200px;
+      top: 48%;
+      left: 66%;
+      background: rgba(255, 30, 86, 0.36);
+      animation: floatBokeh 13s ease-in-out infinite;
+    }
+
+    /* =========================================================================
+       PARTICLE CANVAS (60FPS AMBIENT & EXPLOSION EFFECTS)
+       ========================================================================= */
+    #particleCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* =========================================================================
+       GLASSMORPHIC CARDS & GLOWING BUTTONS
+       ========================================================================= */
+    .spicy-card {
+      background: rgba(18, 4, 9, 0.8);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 30, 86, 0.38);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.85),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07),
+        0 0 42px rgba(217, 4, 41, 0.28);
+    }
+
+    .romantic-card {
+      max-width: 680px;
+      background: linear-gradient(165deg, rgba(68, 9, 26, 0.86) 0%, rgba(39, 5, 16, 0.92) 100%);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1.5px solid rgba(255, 194, 209, 0.48);
+      box-shadow:
+        0 30px 75px rgba(20, 2, 8, 0.78),
+        0 0 52px rgba(255, 117, 143, 0.34),
+        inset 0 1px 0 rgba(255, 228, 234, 0.26);
+    }
+
+    /* Glowing Crimson/Pink Button */
+    @keyframes pulseGlowSpicy {
+      0%, 100% {
+        box-shadow: 0 0 18px rgba(255, 30, 86, 0.55), 0 0 38px rgba(217, 4, 41, 0.45);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 28px rgba(255, 77, 121, 0.9), 0 0 56px rgba(217, 4, 41, 0.72);
+        transform: scale(1.025);
+      }
+    }
+
+    .btn-spicy {
+      background: linear-gradient(135deg, #9e0824 0%, #d90429 48%, #ff1e56 100%);
+      border: 1.5px solid rgba(255, 182, 193, 0.75);
+      color: #ffffff;
+      animation: pulseGlowSpicy 2.3s infinite ease-in-out;
+      transition: transform 0.22s ease, filter 0.22s ease;
+    }
+
+    .btn-spicy:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    .btn-spicy:active {
+      transform: scale(0.97);
+    }
+
+    /* Glowing Romantic WhatsApp Button */
+    @keyframes pulseGlowWhatsApp {
+      0%, 100% {
+        box-shadow:
+          0 0 20px rgba(255, 117, 143, 0.58),
+          0 0 34px rgba(16, 185, 129, 0.4),
+          0 10px 26px rgba(20, 4, 10, 0.6);
+      }
+      50% {
+        box-shadow:
+          0 0 32px rgba(255, 179, 193, 0.88),
+          0 0 46px rgba(52, 211, 153, 0.62),
+          0 14px 34px rgba(20, 4, 10, 0.65);
+      }
+    }
+
+    .btn-whatsapp-romantic {
+      background: linear-gradient(135deg, #be123c 0%, #e11d48 48%, #059669 100%);
+      border: 1.5px solid rgba(255, 240, 243, 0.88);
+      color: #ffffff;
+      animation: pulseGlowWhatsApp 2.5s infinite ease-in-out;
+      transition: transform 0.22s ease, filter 0.22s ease;
+    }
+
+    .btn-whatsapp-romantic:hover {
+      filter: brightness(1.08);
+      transform: translateY(-2px) scale(1.025);
+    }
+
+    .btn-whatsapp-romantic:active {
+      transform: scale(0.97);
+    }
+
+    /* =========================================================================
+       STAGE TRANSITIONS & INTERACTIVE KEYFRAMES
+       ========================================================================= */
+    .stage-section {
+      display: none;
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+      transition: opacity 0.58s cubic-bezier(0.22, 1, 0.36, 1), transform 0.58s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .stage-section.active {
+      display: flex;
+    }
+
+    .stage-section.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Wrong Password Shake */
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); }
+      18% { transform: translateX(-10px); }
+      36% { transform: translateX(10px); }
+      54% { transform: translateX(-7px); }
+      72% { transform: translateX(7px); }
+      90% { transform: translateX(-3px); }
+    }
+
+    .animate-shake {
+      animation: errorShake 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    /* Mystery Box Idle Floating */
+    @keyframes floatBox1 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(-1.6deg); }
+    }
+
+    @keyframes floatBox2 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(1.6deg); }
+    }
+
+    .mystery-box-1 {
+      animation: floatBox1 3.3s ease-in-out infinite;
+    }
+
+    .mystery-box-2 {
+      animation: floatBox2 3.7s ease-in-out infinite;
+    }
+
+    .mystery-box-card {
+      background: linear-gradient(160deg, rgba(59, 7, 18, 0.88) 0%, rgba(15, 4, 8, 0.95) 100%);
+      border: 1.5px solid rgba(255, 30, 86, 0.5);
+      box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.82),
+        0 0 30px rgba(217, 4, 41, 0.34),
+        inset 0 1px 0 rgba(255, 204, 213, 0.16);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.4s ease;
+    }
+
+    .mystery-box-card:hover {
+      border-color: rgba(255, 143, 163, 0.94);
+      box-shadow:
+        0 24px 55px rgba(0, 0, 0, 0.88),
+        0 0 46px rgba(255, 30, 86, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* Intense Selected Box Shake */
+    @keyframes intenseBoxShake {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1.06); }
+      10% { transform: translate(-8px, -4px) rotate(-5deg) scale(1.08); }
+      20% { transform: translate(8px, 3px) rotate(5deg) scale(1.08); }
+      30% { transform: translate(-10px, 2px) rotate(-6deg) scale(1.1); }
+      40% { transform: translate(10px, -3px) rotate(6deg) scale(1.1); }
+      50% { transform: translate(-8px, 4px) rotate(-4deg) scale(1.12); }
+      60% { transform: translate(8px, -2px) rotate(4deg) scale(1.12); }
+      70% { transform: translate(-11px, -3px) rotate(-7deg) scale(1.14); }
+      80% { transform: translate(11px, 3px) rotate(7deg) scale(1.14); }
+      90% { transform: translate(-6px, 2px) rotate(-3deg) scale(1.15); }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1.16); }
+    }
+
+    .box-shaking {
+      animation: intenseBoxShake 0.4s linear infinite !important;
+      border-color: #ff1e56 !important;
+      box-shadow: 0 0 60px rgba(255, 30, 86, 0.92) !important;
+    }
+
+    /* Cartoon Bomb Pulse & Fuse Spark */
+    @keyframes bombThrob {
+      0%, 100% { transform: scale(1) rotate(-2deg); }
+      50% { transform: scale(1.09) rotate(2deg); }
+    }
+
+    .bomb-animate {
+      animation: bombThrob 0.32s ease-in-out infinite;
+    }
+
+    @keyframes sparkFlicker {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      50% { transform: scale(1.5) rotate(25deg); opacity: 0.85; }
+    }
+
+    .fuse-spark {
+      transform-origin: center;
+      animation: sparkFlicker 0.12s infinite alternate;
+    }
+
+    /* Explosion Flash, Shockwave Rings & Smoke Clouds */
+    #explosionOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      pointer-events: none;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #blastFlash {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #ffffff 0%, #ffe5ec 42%, #ff758f 76%, #be123c 100%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 65;
+      transition: opacity 0.12s ease-out;
+    }
+
+    @keyframes shockwaveExpand {
+      0% {
+        width: 24px;
+        height: 24px;
+        opacity: 0.96;
+        border-width: 8px;
+      }
+      100% {
+        width: 150vmax;
+        height: 150vmax;
+        opacity: 0;
+        border-width: 1px;
+      }
+    }
+
+    .shockwave-ring {
+      position: absolute;
+      border-radius: 9999px;
+      border-style: solid;
+      border-color: rgba(255, 228, 234, 0.95);
+      box-shadow: 0 0 42px rgba(255, 117, 143, 0.9);
+      animation: shockwaveExpand 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes smokeBillow {
+      0% {
+        transform: translate(0, 0) scale(0.35);
+        opacity: 0.88;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(2.4);
+        opacity: 0;
+      }
+    }
+
+    .smoke-cloud {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(255, 228, 234, 0.74) 0%, rgba(190, 18, 60, 0.36) 55%, transparent 75%);
+      filter: blur(18px);
+      animation: smokeBillow 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes viewportImpact {
+      0%, 100% { transform: translate(0, 0); }
+      15% { transform: translate(-12px, 9px); }
+      30% { transform: translate(11px, -10px); }
+      45% { transform: translate(-9px, -7px); }
+      60% { transform: translate(8px, 8px); }
+      75% { transform: translate(-5px, 4px); }
+    }
+
+    .impact-shake {
+      animation: viewportImpact 0.55s ease-out;
+    }
+
+    /* =========================================================================
+       ROMANTIC PHOTO FRAME, BLOOMING ROSES & LETTER STYLING
+       ========================================================================= */
+    @keyframes frameHalo {
+      0%, 100% {
+        box-shadow:
+          0 0 26px rgba(255, 143, 163, 0.55),
+          0 0 58px rgba(201, 24, 74, 0.4),
+          inset 0 0 18px rgba(255, 228, 234, 0.32);
+      }
+      50% {
+        box-shadow:
+          0 0 42px rgba(255, 179, 193, 0.85),
+          0 0 80px rgba(255, 77, 109, 0.52),
+          inset 0 0 26px rgba(255, 240, 243, 0.48);
+      }
+    }
+
+    .photo-frame-glow {
+      animation: frameHalo 3.5s ease-in-out infinite;
+    }
+
+    .photo-natural {
+      width: 100%;
+      height: auto;
+      max-height: 520px;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    @keyframes roseBloomFloat {
+      0%, 100% { transform: translateY(0) rotate(-6deg) scale(1); }
+      50% { transform: translateY(-7px) rotate(6deg) scale(1.12); }
+    }
+
+    .rose-bloom {
+      animation: roseBloomFloat 3.2s ease-in-out infinite;
+    }
+
+    @keyframes gentleFloatHeart {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.12); }
+    }
+
+    .floating-badge-heart {
+      animation: gentleFloatHeart 2.8s ease-in-out infinite;
+    }
+
+    /* Staggered Letter Paragraph Reveal */
+    .letter-paragraph {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+
+    .letter-paragraph.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Custom Scrollbar for Letter Container */
+    .letter-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .letter-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 204, 213, 0.08);
+      border-radius: 9999px;
+    }
+    .letter-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 143, 163, 0.45);
+      border-radius: 9999px;
+    }
+    .letter-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 179, 193, 0.68);
+    }
+  </style>
+</head>
+
+<body class="selection:bg-rose-500/40 selection:text-rose-100">
+  <!-- Background Theme Layers -->
+  <div class="theme-layer bg-spicy" aria-hidden="true"></div>
+  <div class="theme-layer bg-romantic" aria-hidden="true"></div>
+  <div class="vignette-overlay" aria-hidden="true"></div>
+
+  <!-- Romantic Bokeh Lights (revealed after transformation) -->
+  <div class="bokeh-orb animate-bokeh-1" aria-hidden="true"></div>
+  <div class="bokeh-orb animate-bokeh-2" aria-hidden="true"></div>
+  <div class="bokeh-orb animate-bokeh-3" aria-hidden="true"></div>
+
+  <!-- 60fps Interactive Particle Canvas -->
+  <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+  <!-- Full-Screen Explosion Flash & Shockwave Overlay -->
+  <div id="blastFlash" aria-hidden="true"></div>
+  <div id="explosionOverlay" aria-hidden="true"></div>
+
+  <!-- Top-Right Music ON/OFF Toggle (OFF by default) -->
+  <header class="fixed top-4 right-4 z-50">
+    <button
+      id="musicToggleBtn"
+      type="button"
+      aria-label="Toggle background music"
+      class="flex items-center gap-2 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide bg-black/75 hover:bg-black/90 text-rose-100 border border-rose-500/45 shadow-lg backdrop-blur-md transition-all duration-200 active:scale-95 cursor-pointer"
+    >
+      <span id="musicIcon">🎵</span>
+      <span id="musicLabel">Music: OFF</span>
+    </button>
+  </header>
+
+  <!-- Main Stage Container -->
+  <main id="appContainer" class="relative z-10 w-full min-h-screen flex flex-col items-center justify-center px-4 py-16 sm:px-6">
+
+    <!-- =======================================================================
+         SCREEN 1: THE SPICY WELCOME (100% SPOILER-FREE)
+         ======================================================================= -->
+    <section id="stage1" class="stage-section active visible w-full max-w-xl flex-col items-center text-center">
+      <div class="spicy-card w-full rounded-3xl p-7 sm:p-11 relative overflow-hidden">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-widest bg-[#3b0712]/90 text-rose-300 border border-[#ff1e56]/40 mb-6">
+          <span>Private Access</span>
+          <span>•</span>
+          <span>For Your Eyes Only</span>
+        </div>
+
+        <h1 class="font-display heading-spicy font-bold text-white drop-shadow-[0_4px_24px_rgba(217,4,41,0.55)] mb-5">
+          There is something spicy waiting for you... 🌶️
+        </h1>
+
+        <p class="subheading-spicy text-rose-200/90 font-medium mb-9">
+          Wanna explore? 👀
+        </p>
+
+        <button
+          id="startExploreBtn"
+          type="button"
+          class="btn-spicy w-full sm:w-auto min-h-[52px] px-9 py-4 rounded-2xl text-base sm:text-lg font-bold tracking-wider uppercase cursor-pointer"
+        >
+          CLICK HERE ❤️
+        </button>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SCREEN 2: THE SECRET PASSWORD 🔐 (100% SPOILER-FREE)
+         ======================================================================= -->
+    <section id="stage2" class="stage-section w-full max-w-lg flex-col items-center text-center">
+      <div id="passwordCard" class="spicy-card w-full rounded-3xl p-7 sm:p-10 relative overflow-hidden transition-all duration-500">
+        <!-- Animated Padlock Icon -->
+        <div class="mx-auto mb-5 w-16 h-16 rounded-2xl bg-[#3b0712]/90 border border-[#ff1e56]/45 flex items-center justify-center shadow-[0_0_25px_rgba(217,4,41,0.4)]">
+          <svg id="padlockSvg" class="w-8 h-8 text-rose-400 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path id="padlockShackle" d="M7 11V7a5 5 0 0 1 10 0v4" class="transition-transform duration-500 origin-bottom-left"></path>
+          </svg>
+        </div>
+
+        <h2 class="font-display text-2xl sm:text-4xl font-bold text-white leading-snug mb-3">
+          Oops! One little security check first. 😏❤️
+        </h2>
+
+        <p class="text-sm sm:text-base text-rose-200/85 mb-7">
+          Enter the password to unlock your surprise.
+        </p>
+
+        <!-- Password Form (ONLY ONE INPUT FIELD) -->
+        <form id="passwordForm" class="w-full flex flex-col items-center" novalidate>
+          <div id="inputWrapper" class="relative w-full mb-3">
+            <input
+              id="passwordInput"
+              type="password"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="Enter the password 🔑"
+              aria-label="Enter the password"
+              class="w-full min-h-[54px] px-5 py-4 pr-12 rounded-2xl bg-black/80 text-white placeholder-rose-300/45 text-center text-base sm:text-lg font-medium border border-[#ff1e56]/45 focus:outline-none focus:border-[#ff1e56] focus:ring-2 focus:ring-[#ff1e56]/35 transition-all"
+            />
+            <!-- Show / Hide Password Toggle -->
+            <button
+              id="togglePasswordVisibility"
+              type="button"
+              aria-label="Show or hide password"
+              class="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 text-rose-300/75 hover:text-rose-200 transition-colors cursor-pointer"
+            >
+              <svg id="eyeIcon" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Glowing Bulb Note -->
+          <div class="flex items-center justify-center gap-2 text-xs sm:text-sm text-amber-200/95 bg-amber-500/10 border border-amber-400/30 rounded-xl px-3.5 py-2 mb-6">
+            <span class="text-base drop-shadow-[0_0_10px_rgba(251,191,36,0.95)]">💡</span>
+            <span>NOTE: The password is your babe's birth date. ❤️</span>
+          </div>
+
+          <!-- Feedback Message Area -->
+          <div id="passwordFeedback" class="min-h-[28px] mb-5 text-sm sm:text-base font-semibold transition-all duration-300"></div>
+
+          <button
+            id="unlockSubmitBtn"
+            type="submit"
+            class="btn-spicy w-full min-h-[52px] py-4 px-7 rounded-2xl text-base sm:text-lg font-bold tracking-wide uppercase cursor-pointer"
+          >
+            UNLOCK MY SURPRISE ❤️
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SCREEN 3: THE MYSTERY BOXES 🎁 & SUSPENSEFUL BOMB SEQUENCE
+         ======================================================================= -->
+    <section id="stage3" class="stage-section w-full max-w-2xl flex-col items-center text-center">
+      <div id="mysteryHeader" class="mb-8 px-2 transition-opacity duration-400">
+        <h2 class="font-display text-2xl sm:text-4xl font-bold text-white leading-snug mb-3 drop-shadow-[0_4px_20px_rgba(217,4,41,0.5)]">
+          Well, well... Looks like someone is curious! 😂
+        </h2>
+        <p class="text-base sm:text-xl text-rose-200/90 font-medium">
+          Choose ANY ONE. Don't overthink it. 👀
+        </p>
+      </div>
+
+      <!-- Two Mystery Boxes (Side-by-side on desktop, stacked vertically on mobile) -->
+      <div id="boxesGrid" class="w-full grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 px-2">
+        <!-- BOX 1 -->
+        <button
+          id="mysteryBox1"
+          type="button"
+          data-box="1"
+          class="mystery-box-card mystery-box-1 group relative rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center cursor-pointer focus:outline-none"
+        >
+          <div class="absolute inset-0 rounded-3xl bg-gradient-to-b from-[#ff1e56]/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <span class="text-7xl sm:text-8xl mb-4 select-none drop-shadow-[0_12px_24px_rgba(255,30,86,0.5)] transition-transform duration-300 group-hover:scale-110">
+            🎁
+          </span>
+          <span class="text-xs uppercase tracking-widest text-rose-300/85 font-semibold">
+            Mystery Box 1
+          </span>
+          <span class="mt-1 text-sm text-rose-100/90 font-medium">
+            Tap to open ✨
+          </span>
+        </button>
+
+        <!-- BOX 2 -->
+        <button
+          id="mysteryBox2"
+          type="button"
+          data-box="2"
+          class="mystery-box-card mystery-box-2 group relative rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center cursor-pointer focus:outline-none"
+        >
+          <div class="absolute inset-0 rounded-3xl bg-gradient-to-b from-[#ff1e56]/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <span class="text-7xl sm:text-8xl mb-4 select-none drop-shadow-[0_12px_24px_rgba(255,30,86,0.5)] transition-transform duration-300 group-hover:scale-110">
+            💝
+          </span>
+          <span class="text-xs uppercase tracking-widest text-rose-300/85 font-semibold">
+            Mystery Box 2
+          </span>
+          <span class="mt-1 text-sm text-rose-100/90 font-medium">
+            Tap to open ✨
+          </span>
+        </button>
+      </div>
+
+      <!-- Suspense Countdown & Emerging Cartoon Bomb Container -->
+      <div id="bombStageContainer" class="hidden flex-col items-center justify-center mt-4 py-6 px-4">
+        <div
+          id="countdownBadge"
+          class="text-5xl sm:text-6xl font-display font-extrabold text-[#ff1e56] drop-shadow-[0_0_25px_rgba(255,30,86,0.9)] mb-4 tracking-wider"
+        >
+          3...
+        </div>
+
+        <p id="suspenseCaption" class="text-base sm:text-lg text-rose-200 font-semibold mb-6 animate-pulse">
+          Wait a second... what is inside?! 😳
+        </p>
+
+        <!-- Detailed Animated Cartoon-Style Round Black Bomb with Sizzling Burning Fuse -->
+        <div id="cartoonBombWrapper" class="hidden relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center bomb-animate">
+          <svg viewBox="0 0 220 220" class="w-full h-full drop-shadow-[0_18px_35px_rgba(0,0,0,0.9)]">
+            <defs>
+              <radialGradient id="bombSphereGrad" cx="35%" cy="32%" r="65%">
+                <stop offset="0%" stop-color="#52525b" />
+                <stop offset="35%" stop-color="#27272a" />
+                <stop offset="85%" stop-color="#09090b" />
+                <stop offset="100%" stop-color="#000000" />
+              </radialGradient>
+              <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#3f3f46" />
+                <stop offset="50%" stop-color="#71717a" />
+                <stop offset="100%" stop-color="#27272a" />
+              </linearGradient>
+              <radialGradient id="sparkGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="35%" stop-color="#fde047" />
+                <stop offset="70%" stop-color="#f97316" />
+                <stop offset="100%" stop-color="rgba(239,68,68,0)" />
+              </radialGradient>
+            </defs>
+
+            <!-- Metallic Fuse Cap -->
+            <rect x="92" y="54" width="36" height="18" rx="4" fill="url(#capGrad)" stroke="#18181b" stroke-width="2" />
+
+            <!-- Round Black Bomb Body -->
+            <circle cx="110" cy="132" r="66" fill="url(#bombSphereGrad)" stroke="#18181b" stroke-width="3" />
+
+            <!-- Glossy Specular Highlight -->
+            <ellipse cx="86" cy="106" rx="18" ry="11" transform="rotate(-28 86 106)" fill="rgba(255,255,255,0.22)" />
+            <circle cx="75" cy="122" r="4" fill="rgba(255,255,255,0.16)" />
+
+            <!-- Bomb Center Icon -->
+            <text x="110" y="142" text-anchor="middle" font-size="28" fill="#ff1e56" opacity="0.92">💣</text>
+
+            <!-- Curved Braided Fuse -->
+            <path
+              id="bombFusePath"
+              d="M 110 54 C 110 30, 145 20, 168 34"
+              fill="none"
+              stroke="#d6b48c"
+              stroke-width="6"
+              stroke-linecap="round"
+              stroke-dasharray="100"
+              stroke-dashoffset="0"
+            />
+
+            <!-- Sizzling Spark Group -->
+            <g id="fuseSparkGroup" transform="translate(168, 34)">
+              <circle cx="0" cy="0" r="22" fill="url(#sparkGlow)" class="fuse-spark" />
+              <g class="fuse-spark">
+                <line x1="-14" y1="0" x2="14" y2="0" stroke="#fef08a" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="0" y1="-14" x2="0" y2="14" stroke="#fef08a" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="-10" y1="-10" x2="10" y2="10" stroke="#fb923c" stroke-width="2" stroke-linecap="round" />
+                <line x1="-10" y1="10" x2="10" y2="-10" stroke="#fb923c" stroke-width="2" stroke-linecap="round" />
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SCREEN 4 & SCREEN 5: THE BIRTHDAY REVEAL ❤️, LETTER & WHATSAPP REPLY 💌
+         ======================================================================= -->
+    <section id="stage4" class="stage-section w-full flex-col items-center">
+      <!-- Centered Romantic Glassmorphic Card -->
+      <article class="romantic-card w-full rounded-[2rem] p-5 sm:p-9 md:p-11 relative overflow-hidden">
+        <!-- Animated Blooming Corner Roses -->
+        <span class="rose-bloom absolute top-4 left-4 text-xl sm:text-2xl select-none pointer-events-none">🌹</span>
+        <span class="rose-bloom absolute top-4 right-4 text-xl sm:text-2xl select-none pointer-events-none" style="animation-delay: 0.8s;">🌹</span>
+
+        <!-- Heading Above Photograph -->
+        <div class="text-center mt-2 mb-6 sm:mb-8">
+          <p class="text-xs sm:text-sm uppercase tracking-[0.22em] text-rose-200/90 font-semibold mb-2">
+            ✨ Celebrating You Today & Always ✨
+          </p>
+          <h1 class="font-display heading-reveal font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-100 via-pink-200 to-amber-100 drop-shadow-[0_4px_18px_rgba(255,117,143,0.5)]">
+            HAPPY 19TH BIRTHDAY, BABE! ❤️
+          </h1>
+        </div>
+
+        <!-- Ornate Glowing Romantic Photo Frame -->
+        <div class="relative mx-auto w-full max-w-[360px] mb-7 sm:mb-9">
+          <!-- Pulsing Corner Heart & Kiss Decorations -->
+          <span class="floating-badge-heart absolute -top-3.5 -left-3.5 z-20 text-2xl sm:text-3xl drop-shadow-md select-none">💖</span>
+          <span class="floating-badge-heart absolute -top-3.5 -right-3.5 z-20 text-2xl sm:text-3xl drop-shadow-md select-none" style="animation-delay: 0.5s;">❤️</span>
+          <span class="floating-badge-heart absolute -bottom-3.5 -left-3.5 z-20 text-2xl sm:text-3xl drop-shadow-md select-none" style="animation-delay: 1.1s;">💕</span>
+          <span class="floating-badge-heart absolute -bottom-3.5 -right-3.5 z-20 text-2xl sm:text-3xl drop-shadow-md select-none" style="animation-delay: 1.5s;">💋</span>
+
+          <div class="photo-frame-glow relative rounded-[1.65rem] p-2.5 bg-gradient-to-br from-rose-200/85 via-pink-400/65 to-amber-200/75">
+            <div class="relative w-full rounded-[1.35rem] overflow-hidden bg-rose-950">
+              <img
+                id="birthdayBoyPhoto"
+                src="1000606875.jpg"
+                alt="Birthday Boy"
+                class="photo-natural select-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider with Envelope -->
+        <div class="flex items-center justify-center gap-3 mb-6">
+          <span class="h-[1px] w-16 sm:w-24 bg-gradient-to-r from-transparent to-rose-300/65"></span>
+          <span class="text-rose-200 text-lg">💌</span>
+          <span class="h-[1px] w-16 sm:w-24 bg-gradient-to-l from-transparent to-rose-300/65"></span>
+        </div>
+
+        <!-- ===================================================================
+             THE PERSONALIZED BIRTHDAY LETTER (EXACT VERBATIM TEXT)
+             =================================================================== -->
+        <div
+          id="birthdayLetterBox"
+          class="letter-scroll relative rounded-2xl bg-black/25 border border-rose-200/25 p-5 sm:p-8 text-rose-50/95 letter-text space-y-5 shadow-inner"
+        >
+          <p class="letter-paragraph font-display text-xl sm:text-2xl font-bold text-rose-200">
+            Hey Babe! ❤️
+          </p>
+
+          <p class="letter-paragraph">
+            Wishing you loads of love, success, good health and wealth on your 19th birthday! 🥹❤️
+          </p>
+
+          <p class="letter-paragraph">
+            I know I'm probably not the best person for you, but I'll always try my best to boil your blood… taaki BP low hone ki problem kabhi na ho tumhe. 😂
+          </p>
+
+          <p class="letter-paragraph">
+            After such a long time, I've finally realised what it feels like to be genuinely loved by someone, and that's all because of you. Thank you for being so patient with me, for tolerating all my mood swings, tantrums and those countless moments when even I don't understand myself.
+          </p>
+
+          <p class="letter-paragraph">
+            I honestly don't know what the future holds for us or how I'll deal with your heartless and rude version if we ever reach a phase like that. But one thing I genuinely wish is that no matter what life puts us through, we never develop harsh feelings for each other. I hope we always find a reason to understand each other rather than give up on each other.
+          </p>
+
+          <p class="letter-paragraph">
+            Mujhe toh ye bhi nahi pata ki tum ye pyaara sa message poora padhoge bhi ya nahi, but agar yahan tak aa hi gaye ho toh bas ek baat yaad rakhna…
+          </p>
+
+          <p class="letter-paragraph font-medium text-pink-100">
+            Main tumse bahut pyaar karti hoon, and I'll always be there to support you, cheer for you, annoy you and stand beside you.
+          </p>
+
+          <p class="letter-paragraph">
+            Keep growing, keep smiling and keep becoming the person you dream of being. I'm genuinely rooting for you, always.
+          </p>
+
+          <p class="letter-paragraph font-display text-lg sm:text-xl font-bold text-rose-200 pt-1">
+            Happy Birthday once again, Babe! ❤️🫂
+          </p>
+        </div>
+
+        <!-- ===================================================================
+             SCREEN 5: THE WHATSAPP REPLY 💌 & REPLAY ACTION
+             =================================================================== -->
+        <div class="mt-9 pt-7 border-t border-rose-200/25 text-center flex flex-col items-center">
+          <p class="font-display text-xl sm:text-2xl font-bold text-rose-100 mb-6 leading-snug">
+            So... did my little surprise make you smile? 🥹❤️
+          </p>
+
+          <!-- Primary WhatsApp Reply Button -->
+          <a
+            id="whatsappReplyLink"
+            href="https://api.whatsapp.com/send?phone=918847890850&text=Your%20surprise%20was%20beautiful!%20%E2%9D%A4%EF%B8%8F%20I%20read%20your%20entire%20message.%20Thank%20you%2C%20Babe!%20%F0%9F%AB%82"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-whatsapp-romantic inline-flex items-center justify-center w-full sm:w-auto min-h-[54px] px-8 py-4 rounded-2xl text-base sm:text-lg font-bold tracking-wide uppercase cursor-pointer shadow-xl no-underline"
+          >
+            CLICK HERE TO REPLY 💌
+          </a>
+
+          <!-- Subtle Copy Reply Message Fallback Button -->
+          <button
+            id="copyReplyMsgBtn"
+            type="button"
+            class="mt-3.5 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/15 border border-rose-200/30 text-rose-100 transition-all active:scale-95 cursor-pointer"
+          >
+            <span id="copyReplyMsgLabel">Copy Reply Message 📋</span>
+          </button>
+
+          <!-- Replay Surprise Button -->
+          <button
+            id="replaySurpriseBtn"
+            type="button"
+            class="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-rose-200/85 hover:text-white bg-black/25 hover:bg-black/35 border border-rose-200/25 transition-all active:scale-95 cursor-pointer"
+          >
+            <span>Replay Surprise 🔄</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Footer -->
+      <footer class="mt-8 mb-4 text-center text-sm text-rose-200/85 font-medium tracking-wide">
+        Made with lots of love ❤️
+      </footer>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       JAVASCRIPT: CONFIGURATION CONSTANTS, WEB AUDIO API & 5-STAGE ENGINE
+       ========================================================================= -->
+  <script>
+    // =========================================================================
+    // CONFIGURATION CONSTANTS
+    // =========================================================================
+    const WHATSAPP_NUMBER = "918847890850";
+    const WHATSAPP_MESSAGE = "Your surprise was beautiful! ❤️ I read your entire message. Thank you, Babe! 🫂";
+    const PHOTO_SRC = "1000606875.jpg";
+
+    // =========================================================================
+    // DOM ELEMENT REFERENCES
+    // =========================================================================
+    const bodyEl = document.body;
+    const appContainer = document.getElementById("appContainer");
+    const stage1 = document.getElementById("stage1");
+    const stage2 = document.getElementById("stage2");
+    const stage3 = document.getElementById("stage3");
+    const stage4 = document.getElementById("stage4");
+
+    const startExploreBtn = document.getElementById("startExploreBtn");
+    const passwordCard = document.getElementById("passwordCard");
+    const passwordForm = document.getElementById("passwordForm");
+    const passwordInput = document.getElementById("passwordInput");
+    const togglePasswordVisibility = document.getElementById("togglePasswordVisibility");
+    const eyeIcon = document.getElementById("eyeIcon");
+    const passwordFeedback = document.getElementById("passwordFeedback");
+    const unlockSubmitBtn = document.getElementById("unlockSubmitBtn");
+    const padlockShackle = document.getElementById("padlockShackle");
+
+    const mysteryHeader = document.getElementById("mysteryHeader");
+    const boxesGrid = document.getElementById("boxesGrid");
+    const mysteryBox1 = document.getElementById("mysteryBox1");
+    const mysteryBox2 = document.getElementById("mysteryBox2");
+    const bombStageContainer = document.getElementById("bombStageContainer");
+    const countdownBadge = document.getElementById("countdownBadge");
+    const suspenseCaption = document.getElementById("suspenseCaption");
+    const cartoonBombWrapper = document.getElementById("cartoonBombWrapper");
+    const bombFusePath = document.getElementById("bombFusePath");
+    const fuseSparkGroup = document.getElementById("fuseSparkGroup");
+
+    const blastFlash = document.getElementById("blastFlash");
+    const explosionOverlay = document.getElementById("explosionOverlay");
+
+    const birthdayBoyPhotoEl = document.getElementById("birthdayBoyPhoto");
+    const whatsappReplyLink = document.getElementById("whatsappReplyLink");
+    const copyReplyMsgBtn = document.getElementById("copyReplyMsgBtn");
+    const copyReplyMsgLabel = document.getElementById("copyReplyMsgLabel");
+    const replaySurpriseBtn = document.getElementById("replaySurpriseBtn");
+
+    const musicToggleBtn = document.getElementById("musicToggleBtn");
+    const musicIcon = document.getElementById("musicIcon");
+    const musicLabel = document.getElementById("musicLabel");
+
+    // Set image source & clean fallback
+    birthdayBoyPhotoEl.src = PHOTO_SRC;
+    birthdayBoyPhotoEl.onerror = function () {
+      this.onerror = null;
+      this.src = "https://placehold.co/600x800/3b0712/ffccd5?text=Special+Surprise+%E2%9D%A4%EF%B8%8F";
+    };
+
+    // Configure WhatsApp Reply Link with window.open + window.location.href fallback
+    const encodedWhatsAppText = encodeURIComponent(WHATSAPP_MESSAGE);
+    const whatsappApiUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodedWhatsAppText}`;
+    whatsappReplyLink.href = whatsappApiUrl;
+
+    whatsappReplyLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      soundEngine.playTensionTick(840);
+      const popup = window.open(whatsappApiUrl, "_blank", "noopener,noreferrer");
+      if (!popup || popup.closed || typeof popup.closed === "undefined") {
+        window.location.href = whatsappApiUrl;
+      }
+    });
+
+    // Clipboard Copy Fallback using document.execCommand('copy')
+    copyReplyMsgBtn.addEventListener("click", () => {
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = WHATSAPP_MESSAGE;
+      tempTextArea.setAttribute("readonly", "");
+      tempTextArea.style.position = "fixed";
+      tempTextArea.style.opacity = "0";
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      try {
+        document.execCommand("copy");
+        copyReplyMsgLabel.textContent = "Copied! ✅";
+        setTimeout(() => {
+          copyReplyMsgLabel.textContent = "Copy Reply Message 📋";
+        }, 2200);
+      } catch (err) {
+        copyReplyMsgLabel.textContent = "Copy Failed";
+      }
+      document.body.removeChild(tempTextArea);
+    });
+
+    // =========================================================================
+    // WEB AUDIO API ENGINE (SYNTHESIZED ROMANTIC MELODY & BOMB SOUND EFFECTS)
+    // =========================================================================
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.isMusicOn = false;
+        this.musicTimer = null;
+        this.chordIndex = 0;
+      }
+
+      unlockContext() {
+        try {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+              this.ctx = new AudioCtx();
+            }
+          }
+          if (this.ctx && this.ctx.state === "suspended") {
+            this.ctx.resume().catch(() => {});
+          }
+        } catch (err) {
+          // Safely ignore audio restrictions on older browsers
+        }
+      }
+
+      toggleMusic() {
+        this.unlockContext();
+        this.isMusicOn = !this.isMusicOn;
+
+        if (this.isMusicOn) {
+          musicIcon.textContent = "🎶";
+          musicLabel.textContent = "Music: ON";
+          musicToggleBtn.classList.add("border-pink-300", "bg-rose-950/90");
+          this.startRomanticMelody();
+        } else {
+          musicIcon.textContent = "🎵";
+          musicLabel.textContent = "Music: OFF";
+          musicToggleBtn.classList.remove("border-pink-300", "bg-rose-950/90");
+          this.stopRomanticMelody();
+        }
+      }
+
+      startRomanticMelody() {
+        this.stopRomanticMelody();
+        const chords = [
+          [349.23, 440.00, 523.25, 659.25], // Fmaj7
+          [220.00, 329.63, 392.00, 523.25], // Am7
+          [293.66, 349.23, 440.00, 523.25], // Dm7
+          [233.08, 349.23, 440.00, 587.33], // Bbmaj7
+          [261.63, 349.23, 392.00, 523.25], // Csus4
+          [261.63, 329.63, 392.00, 493.88]  // Cmaj7
+        ];
+
+        const playNextStep = () => {
+          if (!this.isMusicOn || !this.ctx) return;
+          const chord = chords[this.chordIndex % chords.length];
+          chord.forEach((freq, idx) => {
+            setTimeout(() => {
+              if (this.isMusicOn) {
+                this.playNote(freq, 2.2);
+              }
+            }, idx * 240);
+          });
+          this.chordIndex++;
+          this.musicTimer = setTimeout(playNextStep, 1950);
+        };
+
+        playNextStep();
+      }
+
+      stopRomanticMelody() {
+        if (this.musicTimer) {
+          clearTimeout(this.musicTimer);
+          this.musicTimer = null;
+        }
+      }
+
+      playNote(freq, duration) {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc1 = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const overtoneGain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
+
+          osc1.type = "sine";
+          osc1.frequency.setValueAtTime(freq, now);
+
+          osc2.type = "triangle";
+          osc2.frequency.setValueAtTime(freq * 2, now);
+
+          filter.type = "lowpass";
+          filter.frequency.setValueAtTime(1350, now);
+
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.exponentialRampToValueAtTime(0.04, now + 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+          overtoneGain.gain.setValueAtTime(0.15, now);
+
+          osc1.connect(filter);
+          osc2.connect(overtoneGain);
+          overtoneGain.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + duration + 0.05);
+          osc2.stop(now + duration + 0.05);
+        } catch (err) {}
+      }
+
+      playTensionTick(pitch = 620) {
+        this.unlockContext();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(pitch, now);
+          osc.frequency.exponentialRampToValueAtTime(190, now + 0.11);
+
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } catch (err) {}
+      }
+
+      playFuseSizzle(durationSec = 1.6) {
+        this.unlockContext();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const bufferSize = Math.floor(this.ctx.sampleRate * durationSec);
+          const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+
+          for (let i = 0; i < bufferSize; i++) {
+            const crackle = Math.random() > 0.96 ? (Math.random() * 2 - 1) * 1.45 : 0;
+            data[i] = (Math.random() * 2 - 1) * 0.45 + crackle;
+          }
+
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = noiseBuffer;
+
+          const bandpass = this.ctx.createBiquadFilter();
+          bandpass.type = "bandpass";
+          bandpass.frequency.setValueAtTime(3600, now);
+          bandpass.frequency.linearRampToValueAtTime(5500, now + durationSec);
+          bandpass.Q.setValueAtTime(1.8, now);
+
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.linearRampToValueAtTime(0.19, now + durationSec * 0.85);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + durationSec);
+
+          noise.connect(bandpass);
+          bandpass.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          noise.start(now);
+          noise.stop(now + durationSec);
+        } catch (err) {}
+      }
+
+      playBombExplosion() {
+        this.unlockContext();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+
+          // 1. Sub-Bass Impact Boom
+          const subOsc = this.ctx.createOscillator();
+          const subGain = this.ctx.createGain();
+          subOsc.type = "sine";
+          subOsc.frequency.setValueAtTime(135, now);
+          subOsc.frequency.exponentialRampToValueAtTime(24, now + 0.95);
+
+          subGain.gain.setValueAtTime(0.62, now);
+          subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.15);
+
+          subOsc.connect(subGain);
+          subGain.connect(this.ctx.destination);
+          subOsc.start(now);
+          subOsc.stop(now + 1.2);
+
+          // 2. Explosive Noise Burst
+          const blastDur = 1.45;
+          const bufferSize = Math.floor(this.ctx.sampleRate * blastDur);
+          const blastBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const output = blastBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.34));
+          }
+
+          const blastNoise = this.ctx.createBufferSource();
+          blastNoise.buffer = blastBuffer;
+
+          const lowpass = this.ctx.createBiquadFilter();
+          lowpass.type = "lowpass";
+          lowpass.frequency.setValueAtTime(1450, now);
+          lowpass.frequency.exponentialRampToValueAtTime(150, now + blastDur);
+
+          const blastGain = this.ctx.createGain();
+          blastGain.gain.setValueAtTime(0.56, now);
+          blastGain.gain.exponentialRampToValueAtTime(0.001, now + blastDur);
+
+          blastNoise.connect(lowpass);
+          lowpass.connect(blastGain);
+          blastGain.connect(this.ctx.destination);
+          blastNoise.start(now);
+          blastNoise.stop(now + blastDur);
+
+          // 3. Romantic Chime Swell
+          const chord = [523.25, 659.25, 783.99, 1046.5];
+          chord.forEach((freq, idx) => {
+            const chimeOsc = this.ctx.createOscillator();
+            const chimeGain = this.ctx.createGain();
+            chimeOsc.type = "sine";
+            chimeOsc.frequency.setValueAtTime(freq, now + 0.18 + idx * 0.06);
+
+            chimeGain.gain.setValueAtTime(0.0001, now + 0.18 + idx * 0.06);
+            chimeGain.gain.exponentialRampToValueAtTime(0.075, now + 0.28 + idx * 0.06);
+            chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.85 + idx * 0.06);
+
+            chimeOsc.connect(chimeGain);
+            chimeGain.connect(this.ctx.destination);
+            chimeOsc.start(now + 0.18 + idx * 0.06);
+            chimeOsc.stop(now + 1.95 + idx * 0.06);
+          });
+        } catch (err) {}
+      }
+    }
+
+    const soundEngine = new SoundEngine();
+    musicToggleBtn.addEventListener("click", () => soundEngine.toggleMusic());
+
+    // =========================================================================
+    // 60FPS PARTICLE CANVAS ENGINE (SPICY EMBERS -> ROMANTIC CELEBRATION)
+    // =========================================================================
+    const canvas = document.getElementById("particleCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let canvasWidth = window.innerWidth;
+    let canvasHeight = window.innerHeight;
+    let particles = [];
+    let burstParticles = [];
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvasWidth = window.innerWidth;
+      canvasHeight = window.innerHeight;
+      canvas.width = canvasWidth * dpr;
+      canvas.height = canvasHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function createAmbientParticle(mode, startRandomY = true) {
+      if (mode === "spicy") {
+        return {
+          type: "ember",
+          x: Math.random() * canvasWidth,
+          y: startRandomY ? Math.random() * canvasHeight : canvasHeight + 12,
+          radius: 1.5 + Math.random() * 2.8,
+          vx: (Math.random() - 0.5) * 0.55,
+          vy: -(0.35 + Math.random() * 0.85),
+          alpha: 0.28 + Math.random() * 0.65,
+          color: Math.random() > 0.35 ? "#ff1e56" : "#d90429",
+          phase: Math.random() * Math.PI * 2
+        };
+      } else {
+        // Romantic Mode: falling rose petals, floating hearts, animated roses, floating kisses (💋), golden-pink particles
+        const roll = Math.random();
+        let kind = "petal";
+        let emoji = "";
+
+        if (roll < 0.38) {
+          kind = "petal";
+        } else if (roll < 0.66) {
+          kind = "emoji";
+          const hearts = ["❤️", "💖", "💕"];
+          emoji = hearts[Math.floor(Math.random() * hearts.length)];
+        } else if (roll < 0.78) {
+          kind = "emoji";
+          emoji = "🌹";
+        } else if (roll < 0.90) {
+          kind = "emoji";
+          emoji = "💋";
+        } else {
+          kind = "sparkle";
+        }
+
+        // Keep center slightly clearer on desktop so letter text remains effortless to read
+        let xPos = Math.random() * canvasWidth;
+        if (canvasWidth > 768 && Math.random() < 0.55) {
+          xPos = Math.random() < 0.5
+            ? Math.random() * (canvasWidth * 0.24)
+            : canvasWidth - Math.random() * (canvasWidth * 0.24);
+        }
+
+        const isRising = kind === "emoji" && emoji !== "🌹";
+        return {
+          type: kind,
+          emoji,
+          x: xPos,
+          y: startRandomY
+            ? Math.random() * canvasHeight
+            : (isRising ? canvasHeight + 24 : -24),
+          size: kind === "petal" ? (7 + Math.random() * 6) : (15 + Math.random() * 11),
+          vx: (Math.random() - 0.5) * 0.75,
+          vy: isRising ? -(0.45 + Math.random() * 0.75) : (0.55 + Math.random() * 0.95),
+          rotation: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.03,
+          swayAmp: 0.6 + Math.random() * 1.1,
+          phase: Math.random() * Math.PI * 2,
+          alpha: kind === "sparkle" ? (0.48 + Math.random() * 0.5) : (0.65 + Math.random() * 0.3),
+          petalColor: Math.random() > 0.5 ? "#ff758f" : "#ffccd5",
+          sparkleColor: Math.random() > 0.45 ? "#fde047" : "#ffb3c1"
+        };
+      }
+    }
+
+    function initParticles(mode) {
+      particles = [];
+      const count = mode === "spicy"
+        ? Math.min(48, Math.floor(canvasWidth / 14))
+        : Math.min(58, Math.floor(canvasWidth / 12));
+
+      for (let i = 0; i < count; i++) {
+        particles.push(createAmbientParticle(mode, true));
+      }
+    }
+
+    function spawnExplosionBurst(originX, originY) {
+      const symbols = ["❤️", "💖", "💕", "🌹", "💋", "✨"];
+      for (let i = 0; i < 72; i++) {
+        const angle = (Math.PI * 2 * i) / 72 + (Math.random() - 0.5) * 0.25;
+        const speed = 3.5 + Math.random() * 12;
+        const isEmoji = i % 2 === 0;
+        burstParticles.push({
+          isEmoji,
+          emoji: symbols[i % symbols.length],
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.5,
+          gravity: 0.14,
+          drag: 0.965,
+          size: isEmoji ? (18 + Math.random() * 14) : (4 + Math.random() * 5),
+          color: ["#ffffff", "#ffccd5", "#ff758f", "#fb7185", "#fde047"][i % 5],
+          alpha: 1,
+          decay: 0.011 + Math.random() * 0.01
+        });
+      }
+    }
+
+    function drawRosePetal(ctx, p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.scale(1, Math.sin(p.phase) * 0.45 + 0.65);
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.petalColor;
+
+      ctx.beginPath();
+      ctx.moveTo(0, -p.size);
+      ctx.bezierCurveTo(p.size, -p.size * 0.6, p.size * 0.9, p.size * 0.7, 0, p.size);
+      ctx.bezierCurveTo(-p.size * 0.9, p.size * 0.7, -p.size, -p.size * 0.6, 0, -p.size);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animateCanvas() {
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.phase += 0.025;
+
+        if (p.type === "ember") {
+          p.x += p.vx + Math.sin(p.phase) * 0.3;
+          p.y += p.vy;
+          if (p.y < -12) {
+            particles[i] = createAmbientParticle("spicy", false);
+            continue;
+          }
+          ctx.save();
+          ctx.globalAlpha = p.alpha * (0.65 + 0.35 * Math.sin(p.phase * 1.5));
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        } else if (p.type === "petal") {
+          p.x += p.vx + Math.sin(p.phase) * p.swayAmp;
+          p.y += p.vy;
+          p.rotation += p.vRot;
+          if (p.y > canvasHeight + 25) {
+            particles[i] = createAmbientParticle("romantic", false);
+            continue;
+          }
+          drawRosePetal(ctx, p);
+        } else if (p.type === "emoji") {
+          p.x += p.vx + Math.sin(p.phase) * 0.55;
+          p.y += p.vy;
+          if ((p.vy < 0 && p.y < -30) || (p.vy > 0 && p.y > canvasHeight + 30)) {
+            particles[i] = createAmbientParticle("romantic", false);
+            continue;
+          }
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.font = `${Math.round(p.size)}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(p.emoji, p.x, p.y);
+          ctx.restore();
+        } else if (p.type === "sparkle") {
+          p.x += p.vx;
+          p.y += p.vy * 0.4;
+          if (p.y > canvasHeight + 15) {
+            particles[i] = createAmbientParticle("romantic", false);
+            continue;
+          }
+          ctx.save();
+          ctx.globalAlpha = p.alpha * (0.45 + 0.55 * Math.sin(p.phase * 2));
+          ctx.fillStyle = p.sparkleColor;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = p.sparkleColor;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      for (let i = burstParticles.length - 1; i >= 0; i--) {
+        const bp = burstParticles[i];
+        bp.vx *= bp.drag;
+        bp.vy = bp.vy * bp.drag + bp.gravity;
+        bp.x += bp.vx;
+        bp.y += bp.vy;
+        bp.alpha -= bp.decay;
+
+        if (bp.alpha <= 0) {
+          burstParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, bp.alpha);
+        if (bp.isEmoji) {
+          ctx.font = `${Math.round(bp.size)}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(bp.emoji, bp.x, bp.y);
+        } else {
+          ctx.fillStyle = bp.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = bp.color;
+          ctx.beginPath();
+          ctx.arc(bp.x, bp.y, bp.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      requestAnimationFrame(animateCanvas);
+    }
+
+    initParticles("spicy");
+    animateCanvas();
+
+    // =========================================================================
+    // STAGE TRANSITION HELPER
+    // =========================================================================
+    function transitionToStage(fromStage, toStage, callback) {
+      fromStage.classList.remove("visible");
+      setTimeout(() => {
+        fromStage.classList.remove("active");
+        toStage.classList.add("active");
+        void toStage.offsetWidth;
+        toStage.classList.add("visible");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (callback) callback();
+      }, 420);
+    }
+
+    // =========================================================================
+    // SCREEN 1 -> SCREEN 2
+    // =========================================================================
+    startExploreBtn.addEventListener("click", () => {
+      soundEngine.playTensionTick(740);
+      transitionToStage(stage1, stage2, () => {
+        setTimeout(() => passwordInput.focus(), 150);
+      });
+    });
+
+    // =========================================================================
+    // SCREEN 2: SECRET PASSWORD VALIDATION (7 MARCH IN ALL FORMATS)
+    // =========================================================================
+    togglePasswordVisibility.addEventListener("click", () => {
+      const isHidden = passwordInput.type === "password";
+      passwordInput.type = isHidden ? "text" : "password";
+      eyeIcon.innerHTML = isHidden
+        ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>'
+        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    });
+
+    function isMarchSeventh(rawInput) {
+      if (!rawInput || typeof rawInput !== "string") return false;
+
+      const cleaned = rawInput.trim().toLowerCase();
+      if (!cleaned) return false;
+
+      // Compact numeric formats: 0703, 0307, 703, 307
+      if (/^(0703|0307|703|307)$/.test(cleaned)) {
+        return true;
+      }
+
+      // Normalize ordinals ("7th" -> "7"), filler "of", and common separators (/ - . , _)
+      const normalized = cleaned
+        .replace(/(\d+)(st|nd|rd|th)\b/g, "$1")
+        .replace(/\bof\b/g, " ")
+        .replace(/[/\-.,_]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      // Compact alphanumeric formats: "7march", "07march", "march7"
+      if (/^0?7mar(ch)?$/.test(normalized) || /^mar(ch)?0?7$/.test(normalized)) {
+        return true;
+      }
+
+      const parts = normalized.split(" ");
+      if (parts.length !== 2) return false;
+
+      const [first, second] = parts;
+      const isMarchWord = (token) => token === "march" || token === "mar";
+      const isPureDigits = (token) => /^\d{1,2}$/.test(token);
+
+      if (isPureDigits(first) && isMarchWord(second)) {
+        return parseInt(first, 10) === 7;
+      }
+
+      if (isMarchWord(first) && isPureDigits(second)) {
+        return parseInt(second, 10) === 7;
+      }
+
+      if (isPureDigits(first) && isPureDigits(second)) {
+        const num1 = parseInt(first, 10);
+        const num2 = parseInt(second, 10);
+        return (num1 === 7 && num2 === 3) || (num1 === 3 && num2 === 7);
+      }
+
+      return false;
+    }
+
+    let isUnlocking = false;
+
+    passwordForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (isUnlocking) return;
+
+      const value = passwordInput.value;
+
+      if (isMarchSeventh(value)) {
+        isUnlocking = true;
+        soundEngine.playTensionTick(880);
+        setTimeout(() => soundEngine.playTensionTick(1120), 120);
+
+        padlockShackle.style.transform = "translateY(-4px) rotate(-18deg)";
+        passwordInput.classList.remove("border-red-500");
+        passwordInput.classList.add("border-emerald-400", "ring-2", "ring-emerald-400/40");
+
+        passwordFeedback.innerHTML = `<span class="text-pink-200 drop-shadow-[0_0_12px_rgba(255,143,163,0.85)]">Aww, you remembered! 🥹❤️</span>`;
+        unlockSubmitBtn.disabled = true;
+        unlockSubmitBtn.classList.add("opacity-80");
+
+        const rect = passwordCard.getBoundingClientRect();
+        spawnExplosionBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+        setTimeout(() => {
+          transitionToStage(stage2, stage3, () => {
+            isUnlocking = false;
+            unlockSubmitBtn.disabled = false;
+            unlockSubmitBtn.classList.remove("opacity-80");
+          });
+        }, 1750);
+      } else {
+        soundEngine.playTensionTick(240);
+        passwordCard.classList.remove("animate-shake");
+        void passwordCard.offsetWidth;
+        passwordCard.classList.add("animate-shake");
+
+        passwordInput.classList.add("border-red-500");
+        passwordFeedback.innerHTML = `<span class="text-rose-400">Wrong password, Babe! 😂 Try remembering your favourite date.</span>`;
+        passwordInput.focus();
+      }
+    });
+
+    // =========================================================================
+    // SCREEN 3: MYSTERY BOXES -> 3-2-1 COUNTDOWN -> BOMB -> EXPLOSION -> REVEAL
+    // =========================================================================
+    let isBoxSequenceRunning = false;
+
+    function triggerMysteryBoxSequence(selectedBox, otherBox) {
+      if (isBoxSequenceRunning) return;
+      isBoxSequenceRunning = true;
+
+      // 1. Shake selected box intensely while fading the other back
+      selectedBox.classList.add("box-shaking");
+      otherBox.style.opacity = "0.18";
+      otherBox.style.transform = "scale(0.92)";
+      otherBox.style.pointerEvents = "none";
+      selectedBox.style.pointerEvents = "none";
+
+      soundEngine.playTensionTick(520);
+
+      // 2. Suspenseful 3-2-1 countdown
+      setTimeout(() => {
+        boxesGrid.classList.add("hidden");
+        mysteryHeader.classList.add("opacity-40");
+        bombStageContainer.classList.remove("hidden");
+        bombStageContainer.classList.add("flex");
+
+        let count = 3;
+        countdownBadge.textContent = `${count}...`;
+        soundEngine.playTensionTick(620);
+
+        const countInterval = setInterval(() => {
+          count--;
+          if (count >= 1) {
+            countdownBadge.textContent = `${count}...`;
+            soundEngine.playTensionTick(count === 2 ? 780 : 980);
+          } else {
+            clearInterval(countInterval);
+            countdownBadge.textContent = "💣";
+            suspenseCaption.textContent = "UH OH... WATCH OUT!! 🔥😱";
+
+            // 3. Cartoon round black bomb emerges with sizzling burning fuse
+            cartoonBombWrapper.classList.remove("hidden");
+            soundEngine.playFuseSizzle(1.65);
+
+            const fuseDuration = 1600;
+            const startTime = performance.now();
+            const totalLength = bombFusePath.getTotalLength();
+
+            function updateFuseBurn(now) {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / fuseDuration, 1);
+              const remaining = totalLength * (1 - progress);
+              bombFusePath.style.strokeDashoffset = totalLength * progress;
+
+              const point = bombFusePath.getPointAtLength(remaining);
+              fuseSparkGroup.setAttribute("transform", `translate(${point.x}, ${point.y})`);
+
+              if (progress < 1) {
+                requestAnimationFrame(updateFuseBurn);
+              } else {
+                // 4. Dramatic Bomb Explosion & Romantic Theme Transformation
+                executeBombExplosion();
+              }
+            }
+
+            requestAnimationFrame(updateFuseBurn);
+          }
+        }, 720);
+      }, 950);
+    }
+
+    function executeBombExplosion() {
+      soundEngine.playBombExplosion();
+
+      // Viewport impact shake
+      appContainer.classList.add("impact-shake");
+      setTimeout(() => appContainer.classList.remove("impact-shake"), 600);
+
+      // Bright white-pink flash
+      blastFlash.style.opacity = "1";
+
+      // Expanding smoke rings & shockwaves
+      explosionOverlay.style.display = "flex";
+      explosionOverlay.innerHTML = "";
+
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const ring = document.createElement("div");
+          ring.className = "shockwave-ring";
+          explosionOverlay.appendChild(ring);
+        }, i * 130);
+      }
+
+      const smokeOffsets = [
+        { tx: "-140px", ty: "-110px" },
+        { tx: "150px", ty: "-95px" },
+        { tx: "-120px", ty: "120px" },
+        { tx: "135px", ty: "115px" },
+        { tx: "0px", ty: "-150px" },
+        { tx: "0px", ty: "140px" }
+      ];
+      smokeOffsets.forEach((offset, idx) => {
+        const smoke = document.createElement("div");
+        smoke.className = "smoke-cloud";
+        smoke.style.setProperty("--tx", offset.tx);
+        smoke.style.setProperty("--ty", offset.ty);
+        smoke.style.animationDelay = `${idx * 40}ms`;
+        explosionOverlay.appendChild(smoke);
+      });
+
+      // Burst of glowing hearts and particles
+      spawnExplosionBurst(window.innerWidth / 2, window.innerHeight / 2);
+      setTimeout(() => {
+        spawnExplosionBurst(window.innerWidth * 0.35, window.innerHeight * 0.45);
+        spawnExplosionBurst(window.innerWidth * 0.65, window.innerHeight * 0.45);
+      }, 180);
+
+      // 5. Transform entire website to Romantic & Dreamy theme
+      setTimeout(() => {
+        document.title = "Happy 19th Birthday, Babe! ❤️";
+        bodyEl.classList.add("romantic-mode");
+        initParticles("romantic");
+
+        stage3.classList.remove("visible", "active");
+        stage4.classList.add("active");
+        void stage4.offsetWidth;
+        stage4.classList.add("visible");
+        window.scrollTo({ top: 0, behavior: "instant" });
+
+        blastFlash.style.transition = "opacity 0.95s ease-out";
+        blastFlash.style.opacity = "0";
+
+        revealLetterParagraphs();
+
+        setTimeout(() => {
+          explosionOverlay.style.display = "none";
+          explosionOverlay.innerHTML = "";
+          blastFlash.style.transition = "opacity 0.12s ease-out";
+          isBoxSequenceRunning = false;
+        }, 1150);
+      }, 320);
+    }
+
+    mysteryBox1.addEventListener("click", () => triggerMysteryBoxSequence(mysteryBox1, mysteryBox2));
+    mysteryBox2.addEventListener("click", () => triggerMysteryBoxSequence(mysteryBox2, mysteryBox1));
+
+    // =========================================================================
+    // SCREEN 4: STAGGERED PARAGRAPH REVEAL
+    // =========================================================================
+    function revealLetterParagraphs() {
+      const paragraphs = document.querySelectorAll(".letter-paragraph");
+      paragraphs.forEach((p) => p.classList.remove("revealed"));
+      paragraphs.forEach((p, idx) => {
+        setTimeout(() => {
+          p.classList.add("revealed");
+        }, 250 + idx * 180);
+      });
+    }
+
+    // =========================================================================
+    // SCREEN 5: REPLAY SURPRISE RESET (RESTORES SPOILER-FREE INITIAL STATE)
+    // =========================================================================
+    replaySurpriseBtn.addEventListener("click", () => {
+      soundEngine.playTensionTick(660);
+
+      document.title = "Something Spicy For You... 🌶️";
+      bodyEl.classList.remove("romantic-mode");
+      initParticles("spicy");
+
+      passwordInput.value = "";
+      passwordInput.type = "password";
+      passwordInput.classList.remove("border-red-500", "border-emerald-400", "ring-2", "ring-emerald-400/40");
+      passwordFeedback.innerHTML = "";
+      padlockShackle.style.transform = "translateY(0) rotate(0deg)";
+
+      isBoxSequenceRunning = false;
+      mysteryHeader.classList.remove("opacity-40");
+      boxesGrid.classList.remove("hidden");
+      [mysteryBox1, mysteryBox2].forEach((box) => {
+        box.classList.remove("box-shaking");
+        box.style.opacity = "1";
+        box.style.transform = "";
+        box.style.pointerEvents = "auto";
+      });
+      bombStageContainer.classList.add("hidden");
+      bombStageContainer.classList.remove("flex");
+      cartoonBombWrapper.classList.add("hidden");
+      countdownBadge.textContent = "3...";
+      suspenseCaption.textContent = "Wait a second... what is inside?! 😳";
+      bombFusePath.style.strokeDashoffset = "0";
+      fuseSparkGroup.setAttribute("transform", "translate(168, 34)");
+
+      transitionToStage(stage4, stage1);
+    });
+  </script>
+</body>
+</html>
